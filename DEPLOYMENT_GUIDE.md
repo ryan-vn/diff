@@ -4,7 +4,7 @@
 
 1. 登录你的 GitHub 账户
 2. 点击 "New repository" 按钮
-3. 输入仓库名称，例如 `titan-diff-reports`
+3. 输入仓库名称，例如 `titan-diff-reports` （或你喜欢的任何名称）
 4. 选择 "Public"（如果希望公开访问）
 5. 不要勾选 "Initialize this repository with a README"，因为我们已经有了
 6. 点击 "Create repository"
