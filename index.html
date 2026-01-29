@@ -58,15 +58,6 @@
 
   <main>
     <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
-      <div style="display:flex;gap:8px;align-items:center">
-        <label class="muted">每页</label>
-        <select id="pageSize" class="btn">
-          <option value="25">25</option>
-          <option value="50" selected>50</option>
-          <option value="100">100</option>
-        </select>
-        <button id="exportCsv" class="btn">导出 CSV（当前筛选）</button>
-      </div>
       <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
         <div id="pager" class="muted"></div>
       </div>
@@ -75,10 +66,7 @@
     <section id="content" class="list"></section>
   </main>
 
-  <footer>
-    - 自动渲染 JSON 文件：`diff-reports/itemsparse_3.80.0.65301_to_3.80.0.65586.zhCN.json`。
-    如需用浏览器打开，请使用本地静态服务器（例如 `python -m http.server` 或 `pnpm serve`）。
-  </footer>
+  <footer></footer>
 
   <script>
 // 字段映射（中文标签）
@@ -91,8 +79,8 @@ const FIELD_LABELS = {
   'requiredLevel': '需求等级',
   'bonding': '绑定类型',
   'stackable': '最大堆叠数',
-  'sellPrice': 'NPC售出价（铜）',
-  'buyPrice': 'NPC购买价（铜）'
+  'sellPrice': 'NPC售出价（金）',
+  'buyPrice': 'NPC购买价（金）'
 };
 
 // 核心字段（必须长期稳定使用、用于数据分析的字段）
@@ -130,6 +118,12 @@ function formatFieldValue(field, value){
     const n = Number(value);
     return BONDING_LABELS.hasOwnProperty(n) ? BONDING_LABELS[n] : String(value);
   }
+  if(field === 'inventoryType'){
+    return formatInventoryType(value);
+  }
+  if(field === 'sellPrice' || field === 'buyPrice'){
+    return formatPrice(value);
+  }
   return value === null || value === undefined ? '' : String(value);
 }
 
@@ -142,17 +136,11 @@ function formatInventoryType(v){
   return INV_TYPE_LABELS[v] || (v === 0 ? '-' : String(v));
 }
 
-// 把铜数转换为 金/银/铜 字符串
+// 把铜数转换为 金 单位字符串
 function formatPrice(copper){
   const n = Number(copper) || 0;
-  const g = Math.floor(n/10000);
-  const s = Math.floor((n%10000)/100);
-  const c = n%100;
-  const parts = [];
-  if(g) parts.push(g + '金');
-  if(s) parts.push(s + '银');
-  if(c || parts.length===0) parts.push(c + '铜');
-  return parts.join('');
+  const gold = n / 10000;
+  return gold.toFixed(2) + '金';
 }
 
 // 数据通过 fetch 动态加载（推荐），确保在同一目录下通过静态服务器访问原 JSON 文件
@@ -187,7 +175,7 @@ function fmtCount(){
 // 新的渲染：表格视图 + 分页 + 排序
 let currentRows = [];
 let page = 1;
-let pageSize = Number(document.getElementById('pageSize').value) || 50;
+let pageSize = 50;
 let sortField = 'itemLevel';
 let sortDir = -1; // -1 desc, 1 asc
 
@@ -269,7 +257,6 @@ function render(){
   buildRows();
 
   const total = currentRows.length;
-  pageSize = Number(document.getElementById('pageSize').value) || pageSize;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
   if(page > totalPages) page = totalPages;
   const start = (page-1) * pageSize;
@@ -376,10 +363,12 @@ function showDetailsInline(button, rowData){
 function buildDetailHtml(r){
   if(r.type === 'modified'){
     const m = r.raw;
+    // 构建变化字段集合用于高亮
+    const changedFields = new Set((m.fieldChanges || []).map(f => f.field));
     return `
       <div style="display:flex;gap:12px;flex-wrap:wrap">
-        <div style="flex:1;min-width:320px">${renderKeyValues(m.before || {}, true)}</div>
-        <div style="flex:1;min-width:320px">${renderKeyValues(m.after || {}, true)}</div>
+        <div style="flex:1;min-width:320px">${renderKeyValues(m.before || {}, true, changedFields)}</div>
+        <div style="flex:1;min-width:320px">${renderKeyValues(m.after || {}, true, changedFields)}</div>
         <div style="width:100%">${renderFieldChangesTable(m.fieldChanges || [])}</div>
       </div>
     `;
@@ -398,7 +387,7 @@ function renderFieldChangesTable(changes){
   }).join('') + '</tbody></table>';
 }
 
-function renderKeyValues(obj, highlightCore=false){
+function renderKeyValues(obj, highlightCore=false, changedFields=null){
   const keys = Object.keys(obj || {});
   if(keys.length === 0) return '<div class="muted">无字段</div>';
   
@@ -413,9 +402,12 @@ function renderKeyValues(obj, highlightCore=false){
   return '<table>' + sortedKeys.map(k=>{
     const label = FIELD_LABELS[k] || k;
     const isCoreField = CORE_FIELDS.includes(k);
-    const highlightBg = highlightCore && isCoreField ? 'background:#f0f7ff;font-weight:600' : '';
+    const isChanged = changedFields && changedFields.has(k);
+    let bgColor = '';
+    if(isChanged) bgColor = 'background:#fff3cd;border-left:4px solid #ff9800;padding-left:8px';
+    else if(highlightCore && isCoreField) bgColor = 'background:#f0f7ff;font-weight:600';
     const formatted = formatFieldValue(k, obj[k]);
-    return `<tr style="${highlightBg}"><th>${escapeHtml(label)}</th><td>${escapeHtml(String(formatted))}</td></tr>`;
+    return `<tr style="${bgColor}"><th>${escapeHtml(label)}</th><td>${escapeHtml(String(formatted))}</td></tr>`;
   }).join('') + '</table>';
 }
 
@@ -432,31 +424,6 @@ document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click', e=>{
   render();
 }));
 searchInput.addEventListener('input', ()=>render());
-document.getElementById('pageSize').addEventListener('change', ()=>{ page = 1; render(); });
-document.getElementById('exportCsv').addEventListener('click', ()=>{
-  exportCsv();
-});
-
-// CSV 导出（仅导出核心字段与 id, name）
-function exportCsv(){
-  if(!currentRows || !currentRows.length) return alert('当前无数据可导出');
-  const headers = ['物品ID','物品名称（zhCN）','品质（稀有度）','装备部位','物品等级 (ilvl)','需求等级','绑定类型','类型'];
-  const lines = [headers.join(',')];
-  currentRows.forEach(r=>{
-    const name = `"${(r.name||'').replace(/"/g,'""')}"`;
-    const quality = formatFieldValue('quality', r.type==='modified'?(r.after.quality??r.before.quality):(r.after.quality??r.raw.quality));
-    const inv = r.type==='modified'?(r.after.inventoryType??r.before.inventoryType):(r.after.inventoryType??r.raw.inventoryType);
-    const ilvl = r.type==='modified'?(r.after.itemLevel??r.before.itemLevel):(r.after.itemLevel??r.raw.itemLevel);
-    const req = r.type==='modified'?(r.after.requiredLevel??r.before.requiredLevel):(r.after.requiredLevel??r.raw.requiredLevel);
-    const bonding = formatFieldValue('bonding', r.type==='modified'?(r.after.bonding??r.before.bonding):(r.after.bonding??r.raw.bonding));
-    const row = [r.id, name, quality, formatInventoryType(inv), ilvl, req, bonding, r.type];
-    lines.push(row.join(','));
-  });
-  const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
-  const url = URL.createObjectURL(blob);
-  const a = document.createElement('a');
-  a.href = url; a.download = 'items-diff-export.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
-}
 
 // 初始渲染 —— 先异步加载 JSON，再渲染
 (async ()=>{
