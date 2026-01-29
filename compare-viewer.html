@@ -1,0 +1,468 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>ItemsCompare - 对比查看</title>
+  <style>
+    :root{font-family:system-ui,-apple-system,Segoe UI,Roboto,"Helvetica Neue",Arial;margin:0;color:#111}
+    body{margin:0;padding:20px;background:#f6f7fb}
+    header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
+    h1{font-size:18px;margin:0}
+    .meta{color:#444;font-size:13px}
+    .controls{display:flex;gap:8px;align-items:center}
+    .btn{background:#fff;border:1px solid #d0d4e0;padding:6px 10px;border-radius:6px;cursor:pointer}
+    .btn.active{background:#2f6fed;color:#fff;border-color:#265fcc}
+    input.search{padding:6px 8px;border-radius:6px;border:1px solid #d0d4e0}
+    .summary{display:flex;gap:12px;margin:8px 0 16px}
+    .card{background:#fff;padding:8px 12px;border-radius:8px;border:1px solid #e6e9f2;min-width:120px}
+    .list{display:grid;grid-template-columns:1fr;gap:8px}
+    .item{background:#fff;border:1px solid #e6e9f2;padding:10px;border-radius:8px}
+    .item .row{display:flex;justify-content:space-between;gap:12px}
+    .item .title{font-weight:600}
+    .badge{background:#eef2ff;color:#2352d9;padding:2px 8px;border-radius:999px;font-size:12px}
+    .fields{margin-top:8px;border-top:1px dashed #eef0f8;padding-top:8px}
+    table{width:100%;border-collapse:collapse}
+    th,td{padding:6px 8px;border-bottom:1px solid #f0f2f7;text-align:left;font-size:13px}
+    th{background:#fbfdff;color:#333}
+    tr[style*="background:#f0f7ff"] th{background:#e8f2ff;color:#1a4d99;font-weight:600}
+    .old{color:#b23a3a}
+    .new{color:#1b7a2b}
+    .muted{color:#666}
+    .toggle{cursor:pointer;color:#2f6fed}
+    details summary{list-style:none;cursor:pointer}
+    .json-pre{background:#0f1724;color:#c7f0ff;padding:10px;border-radius:6px;overflow:auto;font-family:monospace;font-size:12px}
+    footer{margin-top:18px;color:#666;font-size:12px}
+  </style>
+</head>
+<body>
+  <header>
+    <div>
+      <h1>ItemSparse 差异查看 (本地)</h1>
+      <div class="meta" id="meta"></div>
+    </div>
+    <div class="controls">
+      <input class="search" id="search" placeholder="按 id 或 名称 搜索" />
+      <button class="btn active" data-filter="all">全部</button>
+      <button class="btn" data-filter="added">新增</button>
+      <button class="btn" data-filter="modified">修改</button>
+      <button class="btn" data-filter="deleted">删除</button>
+    </div>
+  </header>
+
+  <div class="summary">
+    <div class="card"><strong>来源版本</strong><div id="fromVersion" class="muted"></div></div>
+    <div class="card"><strong>目标版本</strong><div id="toVersion" class="muted"></div></div>
+    <div class="card"><strong>统计</strong><div id="counts" class="muted"></div></div>
+  </div>
+
+  <main>
+    <div style="display:flex;gap:12px;align-items:center;margin-bottom:8px;flex-wrap:wrap">
+      <div style="display:flex;gap:8px;align-items:center">
+        <label class="muted">每页</label>
+        <select id="pageSize" class="btn">
+          <option value="25">25</option>
+          <option value="50" selected>50</option>
+          <option value="100">100</option>
+        </select>
+        <button id="exportCsv" class="btn">导出 CSV（当前筛选）</button>
+      </div>
+      <div style="margin-left:auto;display:flex;gap:8px;align-items:center">
+        <div id="pager" class="muted"></div>
+      </div>
+    </div>
+
+    <section id="content" class="list"></section>
+  </main>
+
+  <footer>
+    - 自动渲染 JSON 文件：`diff-reports/itemsparse_3.80.0.65301_to_3.80.0.65586.zhCN.json`。
+    如需用浏览器打开，请使用本地静态服务器（例如 `python -m http.server` 或 `pnpm serve`）。
+  </footer>
+
+  <script>
+// 字段映射（中文标签）
+const FIELD_LABELS = {
+  'id': '物品ID',
+  'name': '物品名称（zhCN）',
+  'quality': '品质（稀有度）',
+  'inventoryType': '装备部位',
+  'itemLevel': '物品等级 (ilvl)',
+  'requiredLevel': '需求等级',
+  'bonding': '绑定类型',
+  'stackable': '最大堆叠数',
+  'sellPrice': 'NPC售出价（铜）',
+  'buyPrice': 'NPC购买价（铜）'
+};
+
+// 核心字段（必须长期稳定使用、用于数据分析的字段）
+const CORE_FIELDS = ['id', 'itemLevel', 'inventoryType', 'quality', 'requiredLevel', 'bonding'];
+
+// 品质数值到中文映射
+const QUALITY_LABELS = {
+  0: '劣质',
+  1: '普通',
+  2: '优秀',
+  3: '精良',
+  4: '史诗',
+  5: '传说',
+  6: '神器',
+  7: '传家宝'
+};
+
+// 绑定类型数值到中文映射
+const BONDING_LABELS = {
+  0: '不绑定',
+  1: '拾取绑定（BoP）',
+  2: '装备绑定（BoE）',
+  3: '使用绑定（BoU）',
+  4: '任务物品'
+};
+
+// 格式化字段显示（针对需要把数值映射为中文的字段）
+function formatFieldValue(field, value){
+  if(field === 'quality'){
+    // 有可能 value 为字符串或数字
+    const n = Number(value);
+    return QUALITY_LABELS.hasOwnProperty(n) ? QUALITY_LABELS[n] : String(value);
+  }
+  if(field === 'bonding'){
+    const n = Number(value);
+    return BONDING_LABELS.hasOwnProperty(n) ? BONDING_LABELS[n] : String(value);
+  }
+  return value === null || value === undefined ? '' : String(value);
+}
+
+// inventoryType 简单映射（可扩展）
+const INV_TYPE_LABELS = {
+  1: '头',2:'颈',3:'肩',5:'胸',6:'腰',7:'腿',8:'脚',9:'手腕',10:'手',11:'戒指',12:'饰品',13:'单手',14:'副手',15:'远程',16:'背部',17:'双手'
+};
+
+function formatInventoryType(v){
+  return INV_TYPE_LABELS[v] || (v === 0 ? '-' : String(v));
+}
+
+// 把铜数转换为 金/银/铜 字符串
+function formatPrice(copper){
+  const n = Number(copper) || 0;
+  const g = Math.floor(n/10000);
+  const s = Math.floor((n%10000)/100);
+  const c = n%100;
+  const parts = [];
+  if(g) parts.push(g + '金');
+  if(s) parts.push(s + '银');
+  if(c || parts.length===0) parts.push(c + '铜');
+  return parts.join('');
+}
+
+// 数据通过 fetch 动态加载（推荐），确保在同一目录下通过静态服务器访问原 JSON 文件
+let DATA = null;
+
+async function loadData(){
+  try{
+    const resp = await fetch('itemsparse_3.80.0.65301_to_3.80.0.65586.zhCN.json');
+    if(!resp.ok) throw new Error('HTTP ' + resp.status);
+    DATA = await resp.json();
+  }catch(e){
+    DATA = null;
+    const content = document.getElementById('content');
+    content.innerHTML = `<div class="item muted">加载 JSON 失败: ${e.message}</div>`;
+  }
+}
+
+// 渲染逻辑
+const content = document.getElementById('content');
+const meta = document.getElementById('meta');
+const fromVersionEl = document.getElementById('fromVersion');
+const toVersionEl = document.getElementById('toVersion');
+const countsEl = document.getElementById('counts');
+const searchInput = document.getElementById('search');
+let activeFilter = 'all';
+
+function fmtCount(){
+  const s = DATA.summary || {};
+  return `新增 ${s.added || 0} • 修改 ${s.modified || 0} • 删除 ${s.deleted || 0} • 总计 ${s.total || '-'} `;
+}
+
+// 新的渲染：表格视图 + 分页 + 排序
+let currentRows = [];
+let page = 1;
+let pageSize = Number(document.getElementById('pageSize').value) || 50;
+let sortField = 'itemLevel';
+let sortDir = -1; // -1 desc, 1 asc
+
+function buildRows(){
+  const added = DATA.details.added || [];
+  const modified = DATA.details.modified || [];
+  const deleted = DATA.details.deleted || [];
+  const q = (searchInput.value || '').trim().toLowerCase();
+
+  let rows = [];
+  if(activeFilter === 'all' || activeFilter === 'added') rows = rows.concat(added.map(a=>({type:'added', item:a})));
+  if(activeFilter === 'all' || activeFilter === 'modified') rows = rows.concat(modified.map(m=>({type:'modified', item:m})));
+  if(activeFilter === 'all' || activeFilter === 'deleted') rows = rows.concat(deleted.map(d=>({type:'deleted', item:d})));
+
+  if(q){
+    rows = rows.filter(r=>{
+      if(r.type === 'added' || r.type === 'deleted'){
+        const it = r.item;
+        return String(it.id).includes(q) || (it.name && String(it.name).toLowerCase().includes(q));
+      }
+      if(r.type === 'modified'){
+        const it = r.item;
+        const name = (it.before && it.before.name) || (it.after && it.after.name) || '';
+        return String(it.itemId).includes(q) || name.toLowerCase().includes(q);
+      }
+      return false;
+    });
+  }
+
+  // map to uniform shape for table
+  currentRows = rows.map(r=>{
+    if(r.type === 'modified'){
+      const m = r.item;
+      return {
+        type: 'modified',
+        id: m.itemId,
+        name: (m.after && m.after.name) || (m.before && m.before.name) || '',
+        before: m.before || {},
+        after: m.after || {},
+        fieldChanges: m.fieldChanges || [],
+        raw: m
+      };
+    }
+    const it = r.item;
+    return {
+      type: r.type,
+      id: it.id,
+      name: it.name || '',
+      before: null,
+      after: it,
+      fieldChanges: [],
+      raw: it
+    };
+  });
+
+  // 排序
+  currentRows.sort((a,b)=>{
+    const av = a.type === 'modified' ? (a.after[sortField] ?? a.before[sortField]) : (a.after[sortField] ?? a.raw[sortField]);
+    const bv = b.type === 'modified' ? (b.after[sortField] ?? b.before[sortField]) : (b.after[sortField] ?? b.raw[sortField]);
+    if(av == null && bv == null) return 0;
+    if(av == null) return 1;
+    if(bv == null) return -1;
+    const na = isNaN(Number(av)) ? String(av).localeCompare(String(bv)) : Number(av) - Number(bv);
+    return na * sortDir;
+  });
+}
+
+function render(){
+  if(!DATA){
+    content.innerHTML = '<div class="item muted">尚未加载数据</div>';
+    return;
+  }
+
+  fromVersionEl.textContent = DATA.fromVersion || '-';
+  toVersionEl.textContent = DATA.toVersion || '-';
+  countsEl.textContent = fmtCount();
+  meta.textContent = `locale: ${DATA.locale || '-'} | 显示: ${activeFilter}`;
+
+  buildRows();
+
+  const total = currentRows.length;
+  pageSize = Number(document.getElementById('pageSize').value) || pageSize;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  if(page > totalPages) page = totalPages;
+  const start = (page-1) * pageSize;
+  const pageRows = currentRows.slice(start, start + pageSize);
+
+  // 渲染表头
+  content.innerHTML = '';
+  const table = document.createElement('div');
+  table.className = 'item';
+  table.style.padding = '0';
+  const header = document.createElement('div');
+  header.style.overflow = 'auto';
+  header.innerHTML = `
+    <table style="margin:0;border:none">
+      <thead>
+        <tr>
+          <th style="width:90px;cursor:pointer" data-field="id">${FIELD_LABELS.id}</th>
+          <th style="width:280px;">${FIELD_LABELS.name}</th>
+          <th style="width:100px;cursor:pointer" data-field="quality">${FIELD_LABELS.quality}</th>
+          <th style="width:90px;">${FIELD_LABELS.inventoryType}</th>
+          <th style="width:90px;cursor:pointer" data-field="itemLevel">${FIELD_LABELS.itemLevel}</th>
+          <th style="width:90px">${FIELD_LABELS.requiredLevel}</th>
+          <th style="width:120px">${FIELD_LABELS.sellPrice}</th>
+          <th style="width:120px">${FIELD_LABELS.buyPrice}</th>
+          <th style="width:90px">类型</th>
+          <th style="width:120px">操作</th>
+        </tr>
+      </thead>
+    </table>
+  `;
+  table.appendChild(header);
+
+  const body = document.createElement('div');
+  body.style.maxHeight = '60vh';
+  body.style.overflow = 'auto';
+  body.innerHTML = '<table style="margin:0;border:none"><tbody>' + pageRows.map(r=>{
+    const qualityVal = r.type === 'modified' ? (r.after.quality ?? r.before.quality) : (r.after.quality ?? r.raw.quality);
+    const qualityLabel = formatFieldValue('quality', qualityVal);
+    const qn = Number(qualityVal);
+    const qColor = qn >=0 && qn <=7 ? (qn===4? '#8b5cf6' : qn===3? '#3b82f6' : qn===2? '#10b981' : '#999') : '#999';
+    const inv = r.type === 'modified' ? (r.after.inventoryType ?? r.before.inventoryType) : (r.after.inventoryType ?? r.raw.inventoryType);
+    const ilvl = r.type === 'modified' ? (r.after.itemLevel ?? r.before.itemLevel) : (r.after.itemLevel ?? r.raw.itemLevel);
+    const req = r.type === 'modified' ? (r.after.requiredLevel ?? r.before.requiredLevel) : (r.after.requiredLevel ?? r.raw.requiredLevel);
+    const sell = r.type === 'modified' ? (r.after.sellPrice ?? r.before.sellPrice) : (r.after.sellPrice ?? r.raw.sellPrice);
+    const buy = r.type === 'modified' ? (r.after.buyPrice ?? r.before.buyPrice) : (r.after.buyPrice ?? r.raw.buyPrice);
+    const bondingVal = r.type === 'modified' ? (r.after.bonding ?? r.before.bonding) : (r.after.bonding ?? r.raw.bonding);
+    const bondingLabel = formatFieldValue('bonding', bondingVal);
+    const typeLabel = r.type === 'added' ? '新增' : r.type === 'deleted' ? '删除' : '修改';
+    // 标记变更的核心字段
+    const changedCore = (r.fieldChanges || []).some(f=> CORE_FIELDS.includes(f.field));
+    return `
+      <tr>
+        <td style="width:90px">${r.id}</td>
+        <td style="width:280px">${escapeHtml(r.name)}</td>
+        <td style="width:100px"><span style="display:inline-block;padding:4px 8px;border-radius:999px;background:${qColor};color:#fff">${escapeHtml(qualityLabel)}</span></td>
+        <td style="width:90px">${escapeHtml(formatInventoryType(inv))}</td>
+        <td style="width:90px">${escapeHtml(String(ilvl))}</td>
+        <td style="width:90px">${escapeHtml(String(req))}</td>
+        <td style="width:120px">${escapeHtml(formatPrice(sell))}</td>
+        <td style="width:120px">${escapeHtml(formatPrice(buy))}</td>
+        <td style="width:90px">${typeLabel}${changedCore? ' • ★' : ''}</td>
+        <td style="width:120px"><button class="btn details-btn">展开</button></td>
+      </tr>
+    `;
+  }).join('') + '</tbody></table>';
+  table.appendChild(body);
+
+  content.appendChild(table);
+
+  // pager info
+  document.getElementById('pager').textContent = `第 ${page}/${totalPages} 页 • 共 ${total} 条`;
+
+  // header sorting绑定
+  header.querySelectorAll('th[data-field]').forEach(th=>{
+    th.style.userSelect = 'none';
+    th.onclick = ()=>{
+      const f = th.dataset.field;
+      if(sortField === f) sortDir = -sortDir; else { sortField = f; sortDir = -1; }
+      render();
+    };
+  });
+
+  // details 按钮绑定：把当前行展开为原来的 details（放在行下方）
+  body.querySelectorAll('.details-btn').forEach((btn, idx)=>{
+    btn.addEventListener('click', ()=>{
+      const row = pageRows[idx];
+      showDetailsInline(btn, row);
+    });
+  });
+}
+
+function showDetailsInline(button, rowData){
+  // 如果已经插入，移除
+  const tr = button.closest('tr');
+  const next = tr.nextElementSibling;
+  if(next && next.classList && next.classList.contains('detail-row')){ next.remove(); return; }
+  // 构建 detail
+  const detail = document.createElement('tr');
+  detail.className = 'detail-row';
+  detail.innerHTML = `<td colspan="10" style="padding:12px;background:#fbfdff">${buildDetailHtml(rowData)}</td>`;
+  tr.parentNode.insertBefore(detail, tr.nextSibling);
+}
+
+function buildDetailHtml(r){
+  if(r.type === 'modified'){
+    const m = r.raw;
+    return `
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:320px">${renderKeyValues(m.before || {}, true)}</div>
+        <div style="flex:1;min-width:320px">${renderKeyValues(m.after || {}, true)}</div>
+        <div style="width:100%">${renderFieldChangesTable(m.fieldChanges || [])}</div>
+      </div>
+    `;
+  }
+  return `<div>${renderKeyValues(r.after || r.raw, true)}</div>`;
+}
+
+function renderFieldChangesTable(changes){
+  if(!changes.length) return '<div class="muted">无字段变更</div>';
+  return `<table><thead><tr><th>字段（中文）</th><th>旧值</th><th>新值</th></tr></thead><tbody>` + changes.map(f=>{
+    const label = FIELD_LABELS[f.field] || f.field;
+    const oldFmt = formatFieldValue(f.field, f.oldValue);
+    const newFmt = formatFieldValue(f.field, f.newValue);
+    const isCore = CORE_FIELDS.includes(f.field);
+    return `<tr style="${isCore? 'background:#f0f7ff;font-weight:600':''}"><td>${isCore? '★ ' : ''}${escapeHtml(label)}</td><td class="old">${escapeHtml(String(oldFmt))}</td><td class="new">${escapeHtml(String(newFmt))}</td></tr>`;
+  }).join('') + '</tbody></table>';
+}
+
+function renderKeyValues(obj, highlightCore=false){
+  const keys = Object.keys(obj || {});
+  if(keys.length === 0) return '<div class="muted">无字段</div>';
+  
+  // 排序：核心字段优先
+  const sortedKeys = keys.sort((a, b)=>{
+    const aIsCore = CORE_FIELDS.includes(a);
+    const bIsCore = CORE_FIELDS.includes(b);
+    if(aIsCore !== bIsCore) return bIsCore ? 1 : -1;
+    return 0;
+  });
+  
+  return '<table>' + sortedKeys.map(k=>{
+    const label = FIELD_LABELS[k] || k;
+    const isCoreField = CORE_FIELDS.includes(k);
+    const highlightBg = highlightCore && isCoreField ? 'background:#f0f7ff;font-weight:600' : '';
+    const formatted = formatFieldValue(k, obj[k]);
+    return `<tr style="${highlightBg}"><th>${escapeHtml(label)}</th><td>${escapeHtml(String(formatted))}</td></tr>`;
+  }).join('') + '</table>';
+}
+
+function escapeHtml(s){
+  return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
+}
+
+// 控件绑定
+document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click', e=>{
+  document.querySelectorAll('.btn').forEach(x=>x.classList.remove('active'));
+  b.classList.add('active');
+  activeFilter = b.dataset.filter;
+  page = 1;
+  render();
+}));
+searchInput.addEventListener('input', ()=>render());
+document.getElementById('pageSize').addEventListener('change', ()=>{ page = 1; render(); });
+document.getElementById('exportCsv').addEventListener('click', ()=>{
+  exportCsv();
+});
+
+// CSV 导出（仅导出核心字段与 id, name）
+function exportCsv(){
+  if(!currentRows || !currentRows.length) return alert('当前无数据可导出');
+  const headers = ['物品ID','物品名称（zhCN）','品质（稀有度）','装备部位','物品等级 (ilvl)','需求等级','绑定类型','类型'];
+  const lines = [headers.join(',')];
+  currentRows.forEach(r=>{
+    const name = `"${(r.name||'').replace(/"/g,'""')}"`;
+    const quality = formatFieldValue('quality', r.type==='modified'?(r.after.quality??r.before.quality):(r.after.quality??r.raw.quality));
+    const inv = r.type==='modified'?(r.after.inventoryType??r.before.inventoryType):(r.after.inventoryType??r.raw.inventoryType);
+    const ilvl = r.type==='modified'?(r.after.itemLevel??r.before.itemLevel):(r.after.itemLevel??r.raw.itemLevel);
+    const req = r.type==='modified'?(r.after.requiredLevel??r.before.requiredLevel):(r.after.requiredLevel??r.raw.requiredLevel);
+    const bonding = formatFieldValue('bonding', r.type==='modified'?(r.after.bonding??r.before.bonding):(r.after.bonding??r.raw.bonding));
+    const row = [r.id, name, quality, formatInventoryType(inv), ilvl, req, bonding, r.type];
+    lines.push(row.join(','));
+  });
+  const blob = new Blob([lines.join('\n')], {type:'text/csv;charset=utf-8;'});
+  const url = URL.createObjectURL(blob);
+  const a = document.createElement('a');
+  a.href = url; a.download = 'items-diff-export.csv'; document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
+}
+
+// 初始渲染 —— 先异步加载 JSON，再渲染
+(async ()=>{
+  await loadData();
+  render();
+})();
+  </script>
+</body>
+</html>
