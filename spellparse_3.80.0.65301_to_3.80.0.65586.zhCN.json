@@ -1,0 +1,977 @@
+{
+  "table": "Spell",
+  "fromVersion": "3.80.0.65301",
+  "toVersion": "3.80.0.65586",
+  "locale": "zhCN",
+  "key": "ID",
+  "columns": [
+    "ID",
+    "NameSubtext_lang",
+    "Description_lang",
+    "AuraDescription_lang",
+    "spellName"
+  ],
+  "summary": {
+    "added": 45,
+    "modified": 25,
+    "deleted": 0,
+    "total": 49860
+  },
+  "details": {
+    "added": [
+      {
+        "ID": 110051,
+        "NameSubtext_lang": "",
+        "Description_lang": "Summons and dismisses the Heart of the Aspects.  This mount changes depending on your Riding skill and location.",
+        "AuraDescription_lang": "$@spellaura440513",
+        "spellName": "Heart of the Aspects"
+      },
+      {
+        "ID": 1252638,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1259687,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1259692,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1259709,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1259712,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1259787,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1265709,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1266345,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1266866,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": ""
+      },
+      {
+        "ID": 1284421,
+        "NameSubtext_lang": "",
+        "Description_lang": "向前发射一颗寒冰宝珠，不断射出冰箭撕碎该区域。冰箭对首个击中的敌人造成$<bolt>点冰霜伤害，而宝珠会对穿过的每个敌人造成$<pass>点冰霜伤害。在其路径终点，宝珠会以放射状爆炸，造成最高$<explo>点冰霜伤害。\r\n\r\n寒冰宝珠的攻击使目标的移动速度降低$1284424s1%，持续$1284424d。该减速效果不被视为冰冷效果。",
+        "AuraDescription_lang": "寒冰宝珠已发射。",
+        "spellName": "寒冰宝珠"
+      },
+      {
+        "ID": 1284422,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "冰冻之球"
+      },
+      {
+        "ID": 1284423,
+        "NameSubtext_lang": "",
+        "Description_lang": "冰冻之球每$t1秒对$72082a1码内的敌人造成$72082s1点伤害。",
+        "AuraDescription_lang": "冰冻之球每$t1秒对$72082a1码内的敌人造成$72082s1点伤害。",
+        "spellName": "冰冻之球"
+      },
+      {
+        "ID": 1284424,
+        "NameSubtext_lang": "",
+        "Description_lang": "向前发射一颗寒冰宝珠，不断射出冰箭撕碎该区域。冰箭对首个击中的敌人造成$<bolt>点冰霜伤害，而宝珠会对穿过的每个敌人造成$<pass>点冰霜伤害。在其路径终点，宝珠会以放射状爆炸，造成最高$<explo>点冰霜伤害。\r\n\r\n寒冰宝珠的攻击使目标的移动速度降低$1284424s1%，持续$1284424d。该减速效果不被视为冰冷效果。",
+        "AuraDescription_lang": "移动速度降低$s1%。",
+        "spellName": "寒冰宝珠"
+      },
+      {
+        "ID": 1284425,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "冰冻之球"
+      },
+      {
+        "ID": 1284426,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "冰冻之球"
+      },
+      {
+        "ID": 1284427,
+        "NameSubtext_lang": "",
+        "Description_lang": "向前发射一颗寒冰宝珠，不断射出冰箭撕碎该区域。冰箭对首个击中的敌人造成$<bolt>点冰霜伤害，而宝珠会对穿过的每个敌人造成$<pass>点冰霜伤害。在其路径终点，宝珠会以放射状爆炸，造成最高$<explo>点冰霜伤害。\r\n\r\n寒冰宝珠的攻击使目标的移动速度降低$1284424s1%，持续$1284424d。该减速效果不被视为冰冷效果。",
+        "AuraDescription_lang": "移动速度降低$s1%。",
+        "spellName": "寒冰宝珠"
+      },
+      {
+        "ID": 1284428,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "冰冻之球"
+      },
+      {
+        "ID": 1284453,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "冰冻之球"
+      },
+      {
+        "ID": 1284456,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "冰冻之球"
+      },
+      {
+        "ID": 1284510,
+        "NameSubtext_lang": "等级 1",
+        "Description_lang": "使冰霜新星的冷却时间缩短$s2%，造成的伤害提高$s1%，但不再令敌人定身。使冰锥术的法力消耗降低$s4%，造成的伤害提高$s3%。在对抗最近的非玩家敌人时，这些伤害加成效果提高至三倍。",
+        "AuraDescription_lang": "",
+        "spellName": "冷锋"
+      },
+      {
+        "ID": 1284519,
+        "NameSubtext_lang": "",
+        "Description_lang": "冰锥术的消耗已部分返还。\r\n",
+        "AuraDescription_lang": "冰锥术的消耗已部分返还。",
+        "spellName": "寒冬之幕"
+      },
+      {
+        "ID": 1284521,
+        "NameSubtext_lang": "等级 2",
+        "Description_lang": "使冰霜新星的冷却时间缩短$s2%，造成的伤害提高$s1%，但不再令敌人定身。使冰锥术的法力消耗降低$s4%，造成的伤害提高$s3%。在对抗最近的非玩家敌人时，这些伤害加成效果提高至三倍。",
+        "AuraDescription_lang": "",
+        "spellName": "冷锋"
+      },
+      {
+        "ID": 1284522,
+        "NameSubtext_lang": "等级 3",
+        "Description_lang": "使冰霜新星的冷却时间缩短$s2%，造成的伤害提高$s1%，但不再令敌人定身。使冰锥术的法力消耗降低$s4%，造成的伤害提高$s3%。在对抗最近的非玩家敌人时，这些伤害加成效果提高至三倍。",
+        "AuraDescription_lang": "",
+        "spellName": "冷锋"
+      },
+      {
+        "ID": 1284534,
+        "NameSubtext_lang": "等级 1",
+        "Description_lang": "使你的冰霜系法术产生的威胁值降低$s1%。如果冰锥术没有击中任何目标，则返还$s2%的法力消耗并重置其冷却时间。",
+        "AuraDescription_lang": "",
+        "spellName": "寒冬之幕"
+      },
+      {
+        "ID": 1284535,
+        "NameSubtext_lang": "等级 2",
+        "Description_lang": "使你的冰霜系法术产生的威胁值降低$s1%。如果冰锥术没有击中任何目标，则返还$s2%的法力消耗并重置其冷却时间。",
+        "AuraDescription_lang": "",
+        "spellName": "寒冬之幕"
+      },
+      {
+        "ID": 1284602,
+        "NameSubtext_lang": "",
+        "Description_lang": "当目标距离超过$s2码时，冰枪术造成的伤害提高$s1%，且对被冻结的非玩家目标造成$s3倍伤害。",
+        "AuraDescription_lang": "",
+        "spellName": "长枪法师"
+      },
+      {
+        "ID": 1285124,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "冰冻之球"
+      },
+      {
+        "ID": 1285366,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "Mage Pet Scaling 05"
+      },
+      {
+        "ID": 1285367,
+        "NameSubtext_lang": "",
+        "Description_lang": "对目标造成$s1点冰霜伤害。",
+        "AuraDescription_lang": "",
+        "spellName": "水箭"
+      },
+      {
+        "ID": 1285506,
+        "NameSubtext_lang": "等级 4",
+        "Description_lang": "使冰霜新星的冷却时间缩短$s2%，造成的伤害提高$s1%，但不再令敌人定身。使冰锥术的法力消耗降低$s4%，造成的伤害提高$s3%。在对抗最近的非玩家敌人时，这些伤害加成效果提高至三倍。",
+        "AuraDescription_lang": "",
+        "spellName": "冷锋"
+      },
+      {
+        "ID": 1285507,
+        "NameSubtext_lang": "等级 5",
+        "Description_lang": "使冰霜新星的冷却时间缩短$s2%，造成的伤害提高$s1%，但不再令敌人定身。使冰锥术的法力消耗降低$s4%，造成的伤害提高$s3%。在对抗最近的非玩家敌人时，这些伤害加成效果提高至三倍。",
+        "AuraDescription_lang": "",
+        "spellName": "冷锋"
+      },
+      {
+        "ID": 1286100,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "Prove your might amid the dark waters of Zangarmarsh!",
+        "spellName": "Might of the Coil"
+      },
+      {
+        "ID": 1286102,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "The might of the Coil courses through your veins. Size increased by $w1%.",
+        "spellName": "Might of the Coil"
+      },
+      {
+        "ID": 1286109,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "Tenacity"
+      },
+      {
+        "ID": 1286110,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "Tenacity"
+      },
+      {
+        "ID": 1286111,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "生命值提高$w1%。\r\n受到的治疗量提高$w2%。\r\n生命值恢复速度提高$w3%。\r\n伤害提高$w4%。",
+        "spellName": "坚韧"
+      },
+      {
+        "ID": 1286112,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "生命值提高$w1%。\r\n受到的治疗量提高$w2%。\r\n生命值恢复速度提高$1283505w1%。\r\n伤害提高$1283505w2%。",
+        "spellName": "坚韧"
+      },
+      {
+        "ID": 1286113,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "Health increased by $w1%.\r\nHealing taken increased by $w2%.\r\nHealth regen increased by $w3%.\r\nDamage dealt increased by $w4%.",
+        "spellName": "Tenacity"
+      },
+      {
+        "ID": 1286128,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "",
+        "spellName": "Friendly Missile Preventer [DNT]"
+      },
+      {
+        "ID": 1286137,
+        "NameSubtext_lang": "",
+        "Description_lang": "The air over this area is protected. You will be ejected in $t1 sec.",
+        "AuraDescription_lang": "警告！你已经进入了魔法禁飞区。",
+        "spellName": "禁飞区"
+      },
+      {
+        "ID": 1286138,
+        "NameSubtext_lang": "",
+        "Description_lang": "施放时移除全部飞行光环。",
+        "AuraDescription_lang": "",
+        "spellName": "移除飞行光环"
+      },
+      {
+        "ID": 1286144,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "Protected against those seeking an unfair fight.\r\n\r\nAttacking a player $s1 or more levels higher than your own will cancel this protection.",
+        "spellName": "Protect the Weak"
+      },
+      {
+        "ID": 1286145,
+        "NameSubtext_lang": "",
+        "Description_lang": "",
+        "AuraDescription_lang": "Protected against those seeking an unfair fight.\r\n\r\nAttacking a player $s1 or more levels higher than your own will cancel this protection.",
+        "spellName": "Protect the Weak"
+      },
+      {
+        "ID": 1286165,
+        "NameSubtext_lang": "",
+        "Description_lang": "打开春节宝箱。",
+        "AuraDescription_lang": "",
+        "spellName": "打开春节宝箱"
+      }
+    ],
+    "modified": [
+      {
+        "spellId": 11108,
+        "before": {
+          "ID": 11108,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪和魔爆术的爆击几率提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "烈焰世界"
+        },
+        "after": {
+          "ID": 11108,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪、寒冰宝珠和魔爆术的爆击几率提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "烈焰世界"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪和魔爆术的爆击几率提高$s1%。",
+            "newValue": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪、寒冰宝珠和魔爆术的爆击几率提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 11242,
+        "before": {
+          "ID": 11242,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术和冰锥术的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "法术冲撞"
+        },
+        "after": {
+          "ID": 11242,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术、寒冰宝珠和冰锥术的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "法术冲撞"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术和冰锥术的伤害提高$s1%。",
+            "newValue": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术、寒冰宝珠和冰锥术的伤害提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 12349,
+        "before": {
+          "ID": 12349,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪和魔爆术的爆击几率提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "烈焰世界"
+        },
+        "after": {
+          "ID": 12349,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪、寒冰宝珠和魔爆术的爆击几率提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "烈焰世界"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪和魔爆术的爆击几率提高$s1%。",
+            "newValue": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪、寒冰宝珠和魔爆术的爆击几率提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 12350,
+        "before": {
+          "ID": 12350,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪和魔爆术的爆击几率提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "烈焰世界"
+        },
+        "after": {
+          "ID": 12350,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪、寒冰宝珠和魔爆术的爆击几率提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "烈焰世界"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪和魔爆术的爆击几率提高$s1%。",
+            "newValue": "使你的烈焰风暴、炎爆术、冲击波、龙息术、活动炸弹、暴风雪、寒冰宝珠和魔爆术的爆击几率提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 12467,
+        "before": {
+          "ID": 12467,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术和冰锥术的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "法术冲撞"
+        },
+        "after": {
+          "ID": 12467,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术、寒冰宝珠和冰锥术的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "法术冲撞"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术和冰锥术的伤害提高$s1%。",
+            "newValue": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术、寒冰宝珠和冰锥术的伤害提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 12469,
+        "before": {
+          "ID": 12469,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术和冰锥术的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "法术冲撞"
+        },
+        "after": {
+          "ID": 12469,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术、寒冰宝珠和冰锥术的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "法术冲撞"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术和冰锥术的伤害提高$s1%。",
+            "newValue": "使你的魔爆术、奥术冲击、冲击波、火焰冲击、灼烧、火球术、冰枪术、寒冰宝珠和冰锥术的伤害提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 29447,
+        "before": {
+          "ID": 29447,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "你的寒冰箭、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "欺凌弱小"
+        },
+        "after": {
+          "ID": 29447,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "你的寒冰箭、寒冰宝珠、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "欺凌弱小"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "你的寒冰箭、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+            "newValue": "你的寒冰箭、寒冰宝珠、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 31682,
+        "before": {
+          "ID": 31682,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "使你的寒冰箭所造成的伤害提高，数值相当于你的法术强度的$s1%，同时你的寒冰箭施法时间缩短${$m2/-1000}.1秒。",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰箭增效"
+        },
+        "after": {
+          "ID": 31682,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "使你的寒冰箭和霜火之箭所造成的伤害提高，数值相当于你的法术强度的$s1%，同时你的寒冰箭施法时间缩短${$m2/-1000}.1秒。",
+          "AuraDescription_lang": "",
+          "spellName": "强能之箭"
+        },
+        "fieldChanges": [
+          {
+            "field": "spellName",
+            "oldValue": "寒冰箭增效",
+            "newValue": "强能之箭"
+          },
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的寒冰箭所造成的伤害提高，数值相当于你的法术强度的$s1%，同时你的寒冰箭施法时间缩短${$m2/-1000}.1秒。",
+            "newValue": "使你的寒冰箭和霜火之箭所造成的伤害提高，数值相当于你的法术强度的$s1%，同时你的寒冰箭施法时间缩短${$m2/-1000}.1秒。"
+          }
+        ]
+      },
+      {
+        "spellId": 31683,
+        "before": {
+          "ID": 31683,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "使你的寒冰箭所造成的伤害提高，数值相当于你的法术强度的$s1%，同时你的寒冰箭施法时间缩短${$m2/-1000}.1秒。",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰箭增效"
+        },
+        "after": {
+          "ID": 31683,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "使你的寒冰箭和霜火之箭所造成的伤害提高，数值相当于你的法术强度的$s1%，同时你的寒冰箭施法时间缩短${$m2/-1000}.1秒。",
+          "AuraDescription_lang": "",
+          "spellName": "强能之箭"
+        },
+        "fieldChanges": [
+          {
+            "field": "spellName",
+            "oldValue": "寒冰箭增效",
+            "newValue": "强能之箭"
+          },
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的寒冰箭所造成的伤害提高，数值相当于你的法术强度的$s1%，同时你的寒冰箭施法时间缩短${$m2/-1000}.1秒。",
+            "newValue": "使你的寒冰箭和霜火之箭所造成的伤害提高，数值相当于你的法术强度的$s1%，同时你的寒冰箭施法时间缩短${$m2/-1000}.1秒。"
+          }
+        ]
+      },
+      {
+        "spellId": 44543,
+        "before": {
+          "ID": 44543,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "你的冰冷效果有$s1%的几率使你获得寒冰指效果，使你的下$44544s1次法术攻击将目标视为已被冻结的目标。持续$44544d。",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰指"
+        },
+        "after": {
+          "ID": 44543,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "你的冰冷效果和寒冰宝珠有$s1%的几率使你获得寒冰指效果，使你的下$44544s1次法术攻击将目标视为已被冻结的目标。持续$44544d。",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰指"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "你的冰冷效果有$s1%的几率使你获得寒冰指效果，使你的下$44544s1次法术攻击将目标视为已被冻结的目标。持续$44544d。",
+            "newValue": "你的冰冷效果和寒冰宝珠有$s1%的几率使你获得寒冰指效果，使你的下$44544s1次法术攻击将目标视为已被冻结的目标。持续$44544d。"
+          }
+        ]
+      },
+      {
+        "spellId": 44545,
+        "before": {
+          "ID": 44545,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "你的冰冷效果有$s1%的几率使你获得寒冰指效果，使你的下$44544s1次法术攻击将目标视为已被冻结的目标。持续$44544d。",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰指"
+        },
+        "after": {
+          "ID": 44545,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "你的冰冷效果和寒冰宝珠有$s1%的几率使你获得寒冰指效果，使你的下$44544s1次法术攻击将目标视为已被冻结的目标。持续$44544d。",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰指"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "你的冰冷效果有$s1%的几率使你获得寒冰指效果，使你的下$44544s1次法术攻击将目标视为已被冻结的目标。持续$44544d。",
+            "newValue": "你的冰冷效果和寒冰宝珠有$s1%的几率使你获得寒冰指效果，使你的下$44544s1次法术攻击将目标视为已被冻结的目标。持续$44544d。"
+          }
+        ]
+      },
+      {
+        "spellId": 44546,
+        "before": {
+          "ID": 44546,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "你的带有冰冷效果的冰霜系伤害性法术有$h%的几率令你的下一个火球术或霜火之箭变成瞬发，并且不消耗法力值。",
+          "AuraDescription_lang": "",
+          "spellName": "思维冷却"
+        },
+        "after": {
+          "ID": 44546,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "你的带有冰冷效果的冰霜系伤害性法术和寒冰宝珠有$h%的几率令你的下一个火球术或霜火之箭变成瞬发，造成的伤害提高$s2%，并且不消耗法力值。",
+          "AuraDescription_lang": "",
+          "spellName": "思维冷却"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "你的带有冰冷效果的冰霜系伤害性法术有$h%的几率令你的下一个火球术或霜火之箭变成瞬发，并且不消耗法力值。",
+            "newValue": "你的带有冰冷效果的冰霜系伤害性法术和寒冰宝珠有$h%的几率令你的下一个火球术或霜火之箭变成瞬发，造成的伤害提高$s2%，并且不消耗法力值。"
+          }
+        ]
+      },
+      {
+        "spellId": 44548,
+        "before": {
+          "ID": 44548,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "你的带有冰冷效果的冰霜系伤害性法术有$h%的几率令你的下一个火球术或霜火之箭变成瞬发，并且不消耗法力值。",
+          "AuraDescription_lang": "",
+          "spellName": "思维冷却"
+        },
+        "after": {
+          "ID": 44548,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "你的带有冰冷效果的冰霜系伤害性法术和寒冰宝珠有$h%的几率令你的下一个火球术或霜火之箭变成瞬发，造成的伤害提高$s2%，并且不消耗法力值。",
+          "AuraDescription_lang": "",
+          "spellName": "思维冷却"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "你的带有冰冷效果的冰霜系伤害性法术有$h%的几率令你的下一个火球术或霜火之箭变成瞬发，并且不消耗法力值。",
+            "newValue": "你的带有冰冷效果的冰霜系伤害性法术和寒冰宝珠有$h%的几率令你的下一个火球术或霜火之箭变成瞬发，造成的伤害提高$s2%，并且不消耗法力值。"
+          }
+        ]
+      },
+      {
+        "spellId": 44561,
+        "before": {
+          "ID": 44561,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "使你召唤的水元素的持续时间延长$/1000;s1秒，你的寒冰箭有$h%的几率为小队或团队中的最多10个成员每5秒恢复一次法力值，数值相当于他们自身法力值上限的1%，效果持续$57669d。该效果每$m2秒最多只能触发一次。",
+          "AuraDescription_lang": "",
+          "spellName": "漫长寒冬"
+        },
+        "after": {
+          "ID": 44561,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "使你召唤的水元素的持续时间延长$/1000;s1秒，你的寒冰箭和寒冰宝珠使小队或团队中的最多10个成员每5秒恢复一次法力值，数值相当于他们自身法力值上限的1%，效果持续$57669d。该效果每$m2秒最多只能触发一次。",
+          "AuraDescription_lang": "",
+          "spellName": "漫长寒冬"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你召唤的水元素的持续时间延长$/1000;s1秒，你的寒冰箭有$h%的几率为小队或团队中的最多10个成员每5秒恢复一次法力值，数值相当于他们自身法力值上限的1%，效果持续$57669d。该效果每$m2秒最多只能触发一次。",
+            "newValue": "使你召唤的水元素的持续时间延长$/1000;s1秒，你的寒冰箭和寒冰宝珠使小队或团队中的最多10个成员每5秒恢复一次法力值，数值相当于他们自身法力值上限的1%，效果持续$57669d。该效果每$m2秒最多只能触发一次。"
+          }
+        ]
+      },
+      {
+        "spellId": 44566,
+        "before": {
+          "ID": 44566,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "after": {
+          "ID": 44566,
+          "NameSubtext_lang": "等级 1",
+          "Description_lang": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+            "newValue": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。"
+          }
+        ]
+      },
+      {
+        "spellId": 44567,
+        "before": {
+          "ID": 44567,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "after": {
+          "ID": 44567,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+            "newValue": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。"
+          }
+        ]
+      },
+      {
+        "spellId": 44568,
+        "before": {
+          "ID": 44568,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "after": {
+          "ID": 44568,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+            "newValue": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。"
+          }
+        ]
+      },
+      {
+        "spellId": 44570,
+        "before": {
+          "ID": 44570,
+          "NameSubtext_lang": "等级 4",
+          "Description_lang": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "after": {
+          "ID": 44570,
+          "NameSubtext_lang": "等级 4",
+          "Description_lang": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+            "newValue": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。"
+          }
+        ]
+      },
+      {
+        "spellId": 44571,
+        "before": {
+          "ID": 44571,
+          "NameSubtext_lang": "等级 5",
+          "Description_lang": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "after": {
+          "ID": 44571,
+          "NameSubtext_lang": "等级 5",
+          "Description_lang": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+          "AuraDescription_lang": "",
+          "spellName": "透骨之寒"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "使你的寒冰箭、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。",
+            "newValue": "使你的寒冰箭、寒冰宝珠、霜火之箭和冰枪术造成的伤害提高$s1%，并使冰冷效果降低目标移动速度的效果提高$s2%。"
+          }
+        ]
+      },
+      {
+        "spellId": 55339,
+        "before": {
+          "ID": 55339,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "你的寒冰箭、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "欺凌弱小"
+        },
+        "after": {
+          "ID": 55339,
+          "NameSubtext_lang": "等级 2",
+          "Description_lang": "你的寒冰箭、寒冰宝珠、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "欺凌弱小"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "你的寒冰箭、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+            "newValue": "你的寒冰箭、寒冰宝珠、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 55340,
+        "before": {
+          "ID": 55340,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "你的寒冰箭、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "欺凌弱小"
+        },
+        "after": {
+          "ID": 55340,
+          "NameSubtext_lang": "等级 3",
+          "Description_lang": "你的寒冰箭、寒冰宝珠、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "欺凌弱小"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "你的寒冰箭、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。",
+            "newValue": "你的寒冰箭、寒冰宝珠、火球术、霜火之箭、炎爆术、奥术飞弹、奥术冲击和奥术弹幕对被诱捕或减速的目标造成的伤害提高$s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 56377,
+        "before": {
+          "ID": 56377,
+          "NameSubtext_lang": "",
+          "Description_lang": "对于等级比你高且被冻结的目标，你的冰枪术造成$56377s1倍伤害，而不是3倍。",
+          "AuraDescription_lang": "",
+          "spellName": "冰枪雕文"
+        },
+        "after": {
+          "ID": 56377,
+          "NameSubtext_lang": "",
+          "Description_lang": "你的寒冰宝珠最后爆炸造成的伤害提高$56377s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰宝珠雕文"
+        },
+        "fieldChanges": [
+          {
+            "field": "spellName",
+            "oldValue": "冰枪雕文",
+            "newValue": "寒冰宝珠雕文"
+          },
+          {
+            "field": "Description_lang",
+            "oldValue": "对于等级比你高且被冻结的目标，你的冰枪术造成$56377s1倍伤害，而不是3倍。",
+            "newValue": "你的寒冰宝珠最后爆炸造成的伤害提高$56377s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 56593,
+        "before": {
+          "ID": 56593,
+          "NameSubtext_lang": "",
+          "Description_lang": "对于等级比你高且被冻结的目标，你的冰枪术造成$56377s1倍伤害，而不是3倍。",
+          "AuraDescription_lang": "",
+          "spellName": "冰枪雕文"
+        },
+        "after": {
+          "ID": 56593,
+          "NameSubtext_lang": "",
+          "Description_lang": "你的寒冰宝珠最后爆炸造成的伤害提高$56377s1%。",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰宝珠雕文"
+        },
+        "fieldChanges": [
+          {
+            "field": "spellName",
+            "oldValue": "冰枪雕文",
+            "newValue": "寒冰宝珠雕文"
+          },
+          {
+            "field": "Description_lang",
+            "oldValue": "对于等级比你高且被冻结的目标，你的冰枪术造成$56377s1倍伤害，而不是3倍。",
+            "newValue": "你的寒冰宝珠最后爆炸造成的伤害提高$56377s1%。"
+          }
+        ]
+      },
+      {
+        "spellId": 56980,
+        "before": {
+          "ID": 56980,
+          "NameSubtext_lang": "",
+          "Description_lang": "",
+          "AuraDescription_lang": "",
+          "spellName": "冰枪雕文"
+        },
+        "after": {
+          "ID": 56980,
+          "NameSubtext_lang": "",
+          "Description_lang": "",
+          "AuraDescription_lang": "",
+          "spellName": "寒冰宝珠雕文"
+        },
+        "fieldChanges": [
+          {
+            "field": "spellName",
+            "oldValue": "冰枪雕文",
+            "newValue": "寒冰宝珠雕文"
+          }
+        ]
+      },
+      {
+        "spellId": 57761,
+        "before": {
+          "ID": 57761,
+          "NameSubtext_lang": "",
+          "Description_lang": "你的下一个火球术或霜火之箭变成瞬发，并且不消耗法力值。",
+          "AuraDescription_lang": "你的下一个火球术或霜火之箭变成瞬发，并且不消耗法力值。",
+          "spellName": "火球！"
+        },
+        "after": {
+          "ID": 57761,
+          "NameSubtext_lang": "",
+          "Description_lang": "你的下一个火球术或霜火之箭变为瞬发，造成的伤害提高，且不消耗法力值。",
+          "AuraDescription_lang": "你的下一个火球术或霜火之箭变为瞬发，造成的伤害提高，且不消耗法力值。",
+          "spellName": "火球！"
+        },
+        "fieldChanges": [
+          {
+            "field": "Description_lang",
+            "oldValue": "你的下一个火球术或霜火之箭变成瞬发，并且不消耗法力值。",
+            "newValue": "你的下一个火球术或霜火之箭变为瞬发，造成的伤害提高，且不消耗法力值。"
+          },
+          {
+            "field": "AuraDescription_lang",
+            "oldValue": "你的下一个火球术或霜火之箭变成瞬发，并且不消耗法力值。",
+            "newValue": "你的下一个火球术或霜火之箭变为瞬发，造成的伤害提高，且不消耗法力值。"
+          }
+        ]
+      }
+    ],
+    "deleted": []
+  },
+  "duplicates": {
+    "old": [],
+    "new": [],
+    "spellNameOld": [],
+    "spellNameNew": []
+  },
+  "sources": {
+    "spellNameOld": "csv/SpellName.3.80.0.65301.csv",
+    "spellNameNew": "csv/SpellName.3.80.0.65586.csv"
+  }
+}

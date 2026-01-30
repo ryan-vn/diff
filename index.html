@@ -10,7 +10,11 @@
     header{display:flex;align-items:center;justify-content:space-between;margin-bottom:12px}
     h1{font-size:18px;margin:0}
     .meta{color:#444;font-size:13px}
-    .controls{display:flex;gap:8px;align-items:center}
+    .controls{display:flex;gap:12px;align-items:center;flex-wrap:wrap}
+    .tabs{display:flex;gap:8px;align-items:center}
+    .filters{display:flex;gap:8px;align-items:center}
+    .tab-btn{background:#fff;border:1px solid #d0d4e0;padding:6px 10px;border-radius:6px;cursor:pointer}
+    .tab-btn.active{background:#111827;color:#fff;border-color:#111827}
     .btn{background:#fff;border:1px solid #d0d4e0;padding:6px 10px;border-radius:6px;cursor:pointer}
     .btn.active{background:#2f6fed;color:#fff;border-color:#265fcc}
     input.search{padding:6px 8px;border-radius:6px;border:1px solid #d0d4e0}
@@ -38,15 +42,21 @@
 <body>
   <header>
     <div>
-      <h1>ItemSparse 差异查看 (本地)</h1>
+      <h1> 差异查看 (本地)</h1>
       <div class="meta" id="meta"></div>
     </div>
     <div class="controls">
+      <div class="tabs">
+        <button class="tab-btn active" data-tab="items">物品</button>
+        <button class="tab-btn" data-tab="spells">技能</button>
+      </div>
       <input class="search" id="search" placeholder="按 id 或 名称 搜索" />
-      <button class="btn active" data-filter="all">全部</button>
-      <button class="btn" data-filter="added">新增</button>
-      <button class="btn" data-filter="modified">修改</button>
-      <button class="btn" data-filter="deleted">删除</button>
+      <div class="filters">
+        <button class="btn filter-btn active" data-filter="all">全部</button>
+        <button class="btn filter-btn" data-filter="added">新增</button>
+        <button class="btn filter-btn" data-filter="modified">修改</button>
+        <button class="btn filter-btn" data-filter="deleted">删除</button>
+      </div>
     </div>
   </header>
 
@@ -85,6 +95,20 @@ const FIELD_LABELS = {
 
 // 核心字段（必须长期稳定使用、用于数据分析的字段）
 const CORE_FIELDS = ['id', 'itemLevel', 'inventoryType', 'quality', 'requiredLevel', 'bonding'];
+
+// Spell 字段映射（中文标签）
+const SPELL_FIELD_LABELS = {
+  'ID': '技能ID',
+  'spellName': '技能名称',
+  'NameSubtext_lang': '技能等级/子名称',
+  'Description_lang': '技能描述',
+  'AuraDescription_lang': '光环描述'
+};
+
+// Spell 核心字段（用于高亮）
+const SPELL_CORE_FIELDS = ['spellName', 'Description_lang', 'AuraDescription_lang', 'NameSubtext_lang'];
+
+const SPELL_FIELD_ORDER = ['ID', 'spellName', 'NameSubtext_lang', 'Description_lang', 'AuraDescription_lang'];
 
 // 品质数值到中文映射
 const QUALITY_LABELS = {
@@ -144,17 +168,28 @@ function formatPrice(copper){
 }
 
 // 数据通过 fetch 动态加载（推荐），确保在同一目录下通过静态服务器访问原 JSON 文件
-let DATA = null;
+const ITEMS_JSON = 'itemsparse_3.80.0.65301_to_3.80.0.65586.zhCN.json';
+const SPELL_JSON = 'spellparse_3.80.0.65301_to_3.80.0.65586.zhCN.json';
+
+let ITEMS_DATA = null;
+let SPELL_DATA = null;
+
+async function fetchJson(url){
+  const resp = await fetch(url);
+  if(!resp.ok) throw new Error('HTTP ' + resp.status);
+  return await resp.json();
+}
 
 async function loadData(){
   try{
-    const resp = await fetch('itemsparse_3.80.0.65301_to_3.80.0.65586.zhCN.json');
-    if(!resp.ok) throw new Error('HTTP ' + resp.status);
-    DATA = await resp.json();
+    ITEMS_DATA = await fetchJson(ITEMS_JSON);
   }catch(e){
-    DATA = null;
-    const content = document.getElementById('content');
-    content.innerHTML = `<div class="item muted">加载 JSON 失败: ${e.message}</div>`;
+    ITEMS_DATA = { __error: e.message };
+  }
+  try{
+    SPELL_DATA = await fetchJson(SPELL_JSON);
+  }catch(e){
+    SPELL_DATA = { __error: e.message };
   }
 }
 
@@ -165,24 +200,37 @@ const fromVersionEl = document.getElementById('fromVersion');
 const toVersionEl = document.getElementById('toVersion');
 const countsEl = document.getElementById('counts');
 const searchInput = document.getElementById('search');
+let activeTab = 'items';
 let activeFilter = 'all';
 
-function fmtCount(){
-  const s = DATA.summary || {};
+function fmtCount(data){
+  const s = (data && data.summary) || {};
   return `新增 ${s.added || 0} • 修改 ${s.modified || 0} • 删除 ${s.deleted || 0} • 总计 ${s.total || '-'} `;
 }
 
 // 新的渲染：表格视图 + 分页 + 排序
 let currentRows = [];
-let page = 1;
 let pageSize = 50;
 let sortField = 'itemLevel';
 let sortDir = -1; // -1 desc, 1 asc
+let spellSortField = 'id';
+let spellSortDir = 1; // 1 asc by default
+let itemPage = 1;
+let spellPage = 1;
 
-function buildRows(){
-  const added = DATA.details.added || [];
-  const modified = DATA.details.modified || [];
-  const deleted = DATA.details.deleted || [];
+function getPage(){
+  return activeTab === 'items' ? itemPage : spellPage;
+}
+
+function setPage(p){
+  if(activeTab === 'items') itemPage = p;
+  else spellPage = p;
+}
+
+function buildItemRows(data){
+  const added = data.details.added || [];
+  const modified = data.details.modified || [];
+  const deleted = data.details.deleted || [];
   const q = (searchInput.value || '').trim().toLowerCase();
 
   let rows = [];
@@ -243,22 +291,45 @@ function buildRows(){
   });
 }
 
+function getActiveData(){
+  return activeTab === 'items' ? ITEMS_DATA : SPELL_DATA;
+}
+
+function updateSearchPlaceholder(){
+  searchInput.placeholder = activeTab === 'items' ? '按 id 或 名称 搜索' : '按 id 或 技能名 搜索';
+}
+
 function render(){
-  if(!DATA){
+  const data = getActiveData();
+  if(!data){
     content.innerHTML = '<div class="item muted">尚未加载数据</div>';
     return;
   }
+  if(data.__error){
+    content.innerHTML = `<div class="item muted">加载 ${activeTab === 'items' ? '物品' : '技能'} JSON 失败: ${data.__error}</div>`;
+    return;
+  }
 
-  fromVersionEl.textContent = DATA.fromVersion || '-';
-  toVersionEl.textContent = DATA.toVersion || '-';
-  countsEl.textContent = fmtCount();
-  meta.textContent = `locale: ${DATA.locale || '-'} | 显示: ${activeFilter}`;
+  fromVersionEl.textContent = data.fromVersion || '-';
+  toVersionEl.textContent = data.toVersion || '-';
+  countsEl.textContent = fmtCount(data);
+  meta.textContent = `数据: ${activeTab === 'items' ? 'ItemSparse' : 'Spell'} | locale: ${data.locale || '-'} | 显示: ${activeFilter}`;
+  updateSearchPlaceholder();
 
-  buildRows();
+  if(activeTab === 'items') renderItems(data);
+  else renderSpells(data);
+}
+
+function renderItems(data){
+  buildItemRows(data);
 
   const total = currentRows.length;
   const totalPages = Math.max(1, Math.ceil(total / pageSize));
-  if(page > totalPages) page = totalPages;
+  let page = getPage();
+  if(page > totalPages){
+    page = totalPages;
+    setPage(page);
+  }
   const start = (page-1) * pageSize;
   const pageRows = currentRows.slice(start, start + pageSize);
 
@@ -348,6 +419,164 @@ function render(){
   });
 }
 
+function getSpellValue(r, field){
+  if(r.type === 'modified'){
+    return r.after[field] ?? r.before[field] ?? '';
+  }
+  return r.after[field] ?? r.raw[field] ?? '';
+}
+
+function buildSpellRows(data){
+  const added = data.details.added || [];
+  const modified = data.details.modified || [];
+  const deleted = data.details.deleted || [];
+  const q = (searchInput.value || '').trim().toLowerCase();
+
+  let rows = [];
+  if(activeFilter === 'all' || activeFilter === 'added') rows = rows.concat(added.map(a=>({type:'added', item:a})));
+  if(activeFilter === 'all' || activeFilter === 'modified') rows = rows.concat(modified.map(m=>({type:'modified', item:m})));
+  if(activeFilter === 'all' || activeFilter === 'deleted') rows = rows.concat(deleted.map(d=>({type:'deleted', item:d})));
+
+  if(q){
+    rows = rows.filter(r=>{
+      if(r.type === 'added' || r.type === 'deleted'){
+        const it = r.item;
+        const name = (it.spellName || '').toLowerCase();
+        return String(it.ID).includes(q) || name.includes(q);
+      }
+      if(r.type === 'modified'){
+        const it = r.item;
+        const name = ((it.after && it.after.spellName) || (it.before && it.before.spellName) || '').toLowerCase();
+        return String(it.spellId).includes(q) || name.includes(q);
+      }
+      return false;
+    });
+  }
+
+  currentRows = rows.map(r=>{
+    if(r.type === 'modified'){
+      const m = r.item;
+      return {
+        type: 'modified',
+        id: m.spellId,
+        spellName: (m.after && m.after.spellName) || (m.before && m.before.spellName) || '',
+        before: m.before || {},
+        after: m.after || {},
+        fieldChanges: m.fieldChanges || [],
+        raw: m
+      };
+    }
+    const it = r.item;
+    return {
+      type: r.type,
+      id: it.ID,
+      spellName: it.spellName || '',
+      before: null,
+      after: it,
+      fieldChanges: [],
+      raw: it
+    };
+  });
+
+  currentRows.sort((a,b)=>{
+    const av = getSpellSortValue(a);
+    const bv = getSpellSortValue(b);
+    if(av == null && bv == null) return 0;
+    if(av == null) return 1;
+    if(bv == null) return -1;
+    const na = isNaN(Number(av)) ? String(av).localeCompare(String(bv)) : Number(av) - Number(bv);
+    return na * spellSortDir;
+  });
+}
+
+function getSpellSortValue(r){
+  if(spellSortField === 'id') return r.id;
+  if(spellSortField === 'spellName') return r.spellName;
+  const field = spellSortField;
+  if(r.type === 'modified') return r.after[field] ?? r.before[field];
+  return r.after[field] ?? r.raw[field];
+}
+
+function renderSpells(data){
+  buildSpellRows(data);
+
+  const total = currentRows.length;
+  const totalPages = Math.max(1, Math.ceil(total / pageSize));
+  let page = getPage();
+  if(page > totalPages){
+    page = totalPages;
+    setPage(page);
+  }
+  const start = (page-1) * pageSize;
+  const pageRows = currentRows.slice(start, start + pageSize);
+
+  content.innerHTML = '';
+  const table = document.createElement('div');
+  table.className = 'item';
+  table.style.padding = '0';
+  const header = document.createElement('div');
+  header.style.overflow = 'auto';
+  header.innerHTML = `
+    <table style="margin:0;border:none">
+      <thead>
+        <tr>
+          <th style="width:90px;cursor:pointer" data-field="id">${SPELL_FIELD_LABELS.ID}</th>
+          <th style="width:200px;cursor:pointer" data-field="spellName">${SPELL_FIELD_LABELS.spellName}</th>
+          <th style="width:140px">${SPELL_FIELD_LABELS.NameSubtext_lang}</th>
+          <th style="width:360px">${SPELL_FIELD_LABELS.Description_lang}</th>
+          <th style="width:260px">${SPELL_FIELD_LABELS.AuraDescription_lang}</th>
+          <th style="width:90px">类型</th>
+          <th style="width:120px">操作</th>
+        </tr>
+      </thead>
+    </table>
+  `;
+  table.appendChild(header);
+
+  const body = document.createElement('div');
+  body.style.maxHeight = '60vh';
+  body.style.overflow = 'auto';
+  body.innerHTML = '<table style="margin:0;border:none"><tbody>' + pageRows.map(r=>{
+    const sub = getSpellValue(r, 'NameSubtext_lang');
+    const desc = getSpellValue(r, 'Description_lang');
+    const aura = getSpellValue(r, 'AuraDescription_lang');
+    const typeLabel = r.type === 'added' ? '新增' : r.type === 'deleted' ? '删除' : '修改';
+    const changedCore = (r.fieldChanges || []).some(f=> SPELL_CORE_FIELDS.includes(f.field));
+    return `
+      <tr>
+        <td style="width:90px">${escapeHtml(String(r.id))}</td>
+        <td style="width:200px">${escapeHtml(r.spellName || '')}</td>
+        <td style="width:140px">${escapeHtml(truncateText(sub, 40))}</td>
+        <td style="width:360px">${escapeHtml(truncateText(desc, 120))}</td>
+        <td style="width:260px">${escapeHtml(truncateText(aura, 80))}</td>
+        <td style="width:90px">${typeLabel}${changedCore? ' • ★' : ''}</td>
+        <td style="width:120px"><button class="btn details-btn">展开</button></td>
+      </tr>
+    `;
+  }).join('') + '</tbody></table>';
+  table.appendChild(body);
+
+  content.appendChild(table);
+
+  document.getElementById('pager').textContent = `第 ${page}/${totalPages} 页 • 共 ${total} 条`;
+
+  header.querySelectorAll('th[data-field]').forEach(th=>{
+    th.style.userSelect = 'none';
+    th.onclick = ()=>{
+      const f = th.dataset.field;
+      if(spellSortField === f) spellSortDir = -spellSortDir; else { spellSortField = f; spellSortDir = 1; }
+      render();
+    };
+  });
+
+  body.querySelectorAll('.details-btn').forEach((btn, idx)=>{
+    btn.addEventListener('click', ()=>{
+      const row = pageRows[idx];
+      showDetailsInline(btn, row);
+    });
+  });
+}
+
 function showDetailsInline(button, rowData){
   // 如果已经插入，移除
   const tr = button.closest('tr');
@@ -356,7 +585,9 @@ function showDetailsInline(button, rowData){
   // 构建 detail
   const detail = document.createElement('tr');
   detail.className = 'detail-row';
-  detail.innerHTML = `<td colspan="10" style="padding:12px;background:#fbfdff">${buildDetailHtml(rowData)}</td>`;
+  const colspan = activeTab === 'items' ? 10 : 7;
+  const html = activeTab === 'items' ? buildDetailHtml(rowData) : buildSpellDetailHtml(rowData);
+  detail.innerHTML = `<td colspan="${colspan}" style="padding:12px;background:#fbfdff">${html}</td>`;
   tr.parentNode.insertBefore(detail, tr.nextSibling);
 }
 
@@ -411,16 +642,86 @@ function renderKeyValues(obj, highlightCore=false, changedFields=null){
   }).join('') + '</table>';
 }
 
+function buildSpellDetailHtml(r){
+  if(r.type === 'modified'){
+    const m = r.raw;
+    const changedFields = new Set((m.fieldChanges || []).map(f => f.field));
+    return `
+      <div style="display:flex;gap:12px;flex-wrap:wrap">
+        <div style="flex:1;min-width:320px">${renderSpellKeyValues(m.before || {}, true, changedFields)}</div>
+        <div style="flex:1;min-width:320px">${renderSpellKeyValues(m.after || {}, true, changedFields)}</div>
+        <div style="width:100%">${renderSpellFieldChangesTable(m.fieldChanges || [])}</div>
+      </div>
+    `;
+  }
+  return `<div>${renderSpellKeyValues(r.after || r.raw, true)}</div>`;
+}
+
+function formatSpellFieldValue(field, value){
+  return value === null || value === undefined ? '' : String(value);
+}
+
+function renderSpellFieldChangesTable(changes){
+  if(!changes.length) return '<div class="muted">无字段变更</div>';
+  return `<table><thead><tr><th>字段（中文）</th><th>旧值</th><th>新值</th></tr></thead><tbody>` + changes.map(f=>{
+    const label = SPELL_FIELD_LABELS[f.field] || f.field;
+    const oldFmt = formatSpellFieldValue(f.field, f.oldValue);
+    const newFmt = formatSpellFieldValue(f.field, f.newValue);
+    const isCore = SPELL_CORE_FIELDS.includes(f.field);
+    return `<tr style="${isCore? 'background:#f0f7ff;font-weight:600':''}"><td>${isCore? '★ ' : ''}${escapeHtml(label)}</td><td class="old">${escapeHtml(String(oldFmt))}</td><td class="new">${escapeHtml(String(newFmt))}</td></tr>`;
+  }).join('') + '</tbody></table>';
+}
+
+function renderSpellKeyValues(obj, highlightCore=false, changedFields=null){
+  const keys = Object.keys(obj || {});
+  if(keys.length === 0) return '<div class="muted">无字段</div>';
+
+  const sortedKeys = keys.sort((a, b)=>{
+    const ai = SPELL_FIELD_ORDER.indexOf(a);
+    const bi = SPELL_FIELD_ORDER.indexOf(b);
+    if(ai !== -1 || bi !== -1){
+      if(ai === -1) return 1;
+      if(bi === -1) return -1;
+      return ai - bi;
+    }
+    return String(a).localeCompare(String(b));
+  });
+
+  return '<table>' + sortedKeys.map(k=>{
+    const label = SPELL_FIELD_LABELS[k] || k;
+    const isCoreField = SPELL_CORE_FIELDS.includes(k);
+    const isChanged = changedFields && changedFields.has(k);
+    let bgColor = '';
+    if(isChanged) bgColor = 'background:#fff3cd;border-left:4px solid #ff9800;padding-left:8px';
+    else if(highlightCore && isCoreField) bgColor = 'background:#f0f7ff;font-weight:600';
+    const formatted = formatSpellFieldValue(k, obj[k]);
+    return `<tr style="${bgColor}"><th>${escapeHtml(label)}</th><td>${escapeHtml(String(formatted))}</td></tr>`;
+  }).join('') + '</table>';
+}
+
+function truncateText(value, max){
+  const s = value === null || value === undefined ? '' : String(value);
+  if(!max || s.length <= max) return s;
+  return s.slice(0, max) + '...';
+}
+
 function escapeHtml(s){
   return String(s).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;');
 }
 
 // 控件绑定
-document.querySelectorAll('.btn').forEach(b=>b.addEventListener('click', e=>{
-  document.querySelectorAll('.btn').forEach(x=>x.classList.remove('active'));
+document.querySelectorAll('.filter-btn').forEach(b=>b.addEventListener('click', e=>{
+  document.querySelectorAll('.filter-btn').forEach(x=>x.classList.remove('active'));
   b.classList.add('active');
   activeFilter = b.dataset.filter;
-  page = 1;
+  setPage(1);
+  render();
+}));
+document.querySelectorAll('.tab-btn').forEach(btn=>btn.addEventListener('click', ()=>{
+  if(activeTab === btn.dataset.tab) return;
+  activeTab = btn.dataset.tab;
+  document.querySelectorAll('.tab-btn').forEach(x=>x.classList.remove('active'));
+  btn.classList.add('active');
   render();
 }));
 searchInput.addEventListener('input', ()=>render());
